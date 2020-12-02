@@ -57,8 +57,7 @@ import { mapMutations } from 'vuex'
     data: () => ({
       drawer: null,
       items: [
-        { icon: 'mdi-playlist-check ', text: 'Checklist', link: '/checklist' },
-        { icon: 'mdi-history', text: 'History', link: '/history' },
+        { icon: 'mdi-playlist-check ', text: 'Checklist', link: '/checklist' }
       ],
     }),
     beforeMount () {
