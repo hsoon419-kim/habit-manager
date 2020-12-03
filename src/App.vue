@@ -52,13 +52,23 @@
 </template>
 
 <script>
+  import { mapActions } from 'vuex'
+
   export default {
     data: () => ({
       drawer: null,
       items: [
         { icon: 'mdi-playlist-check ', text: 'Checklist', link: '/checklist' }
       ],
-    })
+    }),
+    beforeMount () {
+      this.loadData()
+    },
+    methods: {
+      ...mapActions ({
+        loadData: 'LOAD_DATA',
+      }),
+    }
   }
 </script>
 
