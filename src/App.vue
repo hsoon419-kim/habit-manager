@@ -52,29 +52,13 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
   export default {
     data: () => ({
       drawer: null,
       items: [
         { icon: 'mdi-playlist-check ', text: 'Checklist', link: '/checklist' }
       ],
-    }),
-    beforeMount () {
-      this.initializeData()
-    },
-    methods: {
-      ...mapMutations([
-        'setInitData'
-      ]),
-      initializeData() {
-        this.getDataFromLocalStorage()
-      },
-      getDataFromLocalStorage() {
-        let data = localStorage.getItem('habit-manager')
-        this.setInitData(data)
-      }
-    }
+    })
   }
 </script>
 
