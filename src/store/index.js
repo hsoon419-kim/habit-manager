@@ -117,10 +117,15 @@ export default new Vuex.Store({
       if (args === null) {
         state.habit = state.default
       } else {
-        let habit = args
+        let habit = []
         state.default.forEach(x => {
           const item = args.find(y => y.name == x.name)
-          if (item === undefined) habit.push(x)
+          if (item === undefined) {
+            habit.push(x)
+          } else {
+            const update = { name : x.name, info: x.info, records: item.records }
+            habit.push(update)
+          }
         })
         state.habit = habit
       }
