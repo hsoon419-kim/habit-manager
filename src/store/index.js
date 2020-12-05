@@ -1,11 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import moment from 'moment-timezone'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    date: new Date().toISOString().substring(0, 10),
+    date: moment().tz(moment.tz.guess()).format('YYYY-MM-DD'),
     localStorageDataName: 'habit-manager-data',
     default: [
       {
