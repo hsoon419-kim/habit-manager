@@ -32,6 +32,29 @@ export default new Vuex.Store({
           ]
         },
         records: []
+      },
+      {
+        name: 'Weight Training',
+        info: {
+          items: {
+            squat: 'Squat',
+            pushUp: 'Push Up',
+            plank: 'Plank',
+            burpeeTest: 'Burpee Test'
+          },
+          itemUnits: {
+            squat: 'count',
+            pushUp: 'count',
+            plank: 'time',
+            burpeeTest: 'time'
+          },
+          goals: [
+            {
+              name: 'Weight training everyday'
+            }
+          ]
+        },
+        records: []
       }
     ]
   },
@@ -66,6 +89,30 @@ export default new Vuex.Store({
       } else {
         return state.habit[habitIdx].records[recordIdx]
       }
+    },
+    GET_WEIGHT_TRAINING_INFO (state) {
+      const habitIdx = state.habit.findIndex(x => x.name === 'Weight Training')
+      return { name: state.habit[habitIdx].name, info: state.habit[habitIdx].info }
+    },
+    GET_WEIGHT_TRAINING_RECORD (state) {
+      const habitIdx = state.habit.findIndex(x => x.name === 'Weight Training')
+      const recordIdx = state.habit[habitIdx].records.findIndex(x => x.date === state.date)
+
+      if (recordIdx === -1) {
+        return {
+          date: state.date,
+          isRecorded: false,
+          items: {
+            squat: 0,
+            pushUp: 0,
+            plank: 0,
+            burpeeTest: 0,
+          },
+          goals: [false]
+        }
+      } else {
+        return state.habit[habitIdx].records[recordIdx]
+      }
     }
   },
   mutations: {
@@ -73,10 +120,29 @@ export default new Vuex.Store({
       state.date = args
     },
     SET_DATA (state, args) {
-      state.habit = args !== null ? args : state.default
+      if (args === null) {
+        state.habit = state.default
+      } else {
+        let habit = args
+        state.default.forEach(x => {
+          const item = args.find(y => y.name == x.name)
+          if (item === undefined) habit.push(x)
+        })
+        state.habit = habit
+      }
     },
     SET_SLEEP_RECORD (state, args) {
       const habitIdx = state.habit.findIndex(x => x.name === 'Sleep')
+      const recordIdx = state.habit[habitIdx].records.findIndex(x => x.date === state.date)
+
+      if (recordIdx === -1) {
+        state.habit[habitIdx].records.push(args)
+      } else {
+        state.habit[habitIdx].records[recordIdx] = args
+      }
+    },
+    SET_WEIGHT_TRAINING_RECORD (state, args) {
+      const habitIdx = state.habit.findIndex(x => x.name === 'Weight Training')
       const recordIdx = state.habit[habitIdx].records.findIndex(x => x.date === state.date)
 
       if (recordIdx === -1) {
@@ -93,6 +159,10 @@ export default new Vuex.Store({
     },
     SAVE_SLEEP_RECORD (context, args) {
       context.commit('SET_SLEEP_RECORD', args)
+      saveDataToLocalStorage(context.state.localStorageDataName, context.state.habit)
+    },
+    SAVE_WEIGHT_TRAINING_RECORD (context, args) {
+      context.commit('SET_WEIGHT_TRAINING_RECORD', args)
       saveDataToLocalStorage(context.state.localStorageDataName, context.state.habit)
     }
   }
