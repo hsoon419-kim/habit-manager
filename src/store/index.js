@@ -39,8 +39,8 @@ export default new Vuex.Store({
           items: {
             squat: 'Squat (count)',
             pushUp: 'Push Up (count)',
-            plank: 'Plank (count)',
-            burpeeTest: 'Burpee Test (sec)'
+            plank: 'Plank (sec)',
+            burpeeTest: 'Burpee Test (count)'
           },
           goals: [
             {
