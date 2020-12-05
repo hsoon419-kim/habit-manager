@@ -1,6 +1,6 @@
 <template>
   <v-text-field
-    v-model="stringValue"
+    v-model="valueValue"
     :label="label"
   ></v-text-field>
 </template>
@@ -8,35 +8,34 @@
 <script>
 export default {
   model: {
-    prop: 'string',
+    prop: 'value',
     event: 'change'
   },
   props: {
-    string: {
-      type: String,
+    value: {
       required: true
     },
     label: {
       type: String,
       required: false,
-      default: 'String'
+      default: 'Value'
     }
   },
   data () {
     return {
-      stringValue: null
+      valueValue: null
     }
   },
   watch: {
-    string (data) {
-      this.stringValue = data
+    value (data) {
+      this.valueValue = data
     },
-    stringValue (data) {
+    valueValue (data) {
       this.$emit('change', data)
     }
   },
   beforeMount () {
-    this.stringValue = this.string
+    this.valueValue = this.value
   }
 }
 </script>
