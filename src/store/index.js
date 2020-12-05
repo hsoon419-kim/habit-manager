@@ -37,16 +37,10 @@ export default new Vuex.Store({
         name: 'Weight Training',
         info: {
           items: {
-            squat: 'Squat',
-            pushUp: 'Push Up',
-            plank: 'Plank',
-            burpeeTest: 'Burpee Test'
-          },
-          itemUnits: {
-            squat: 'count',
-            pushUp: 'count',
-            plank: 'time',
-            burpeeTest: 'time'
+            squat: 'Squat (count)',
+            pushUp: 'Push Up (count)',
+            plank: 'Plank (count)',
+            burpeeTest: 'Burpee Test (sec)'
           },
           goals: [
             {
