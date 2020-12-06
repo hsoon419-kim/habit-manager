@@ -7,7 +7,72 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     date: moment().tz(moment.tz.guess()).format('YYYY-MM-DD'),
+
     localStorageDataName: 'habit-manager-data',
+
+    defaultRecord: [
+      {
+        name: 'Sleep',
+        record: {
+          date: '',
+          isRecorded: false,
+          items: {
+            startDate: '',
+            startTime: '00:00',
+            finishDate: '',
+            finishTime: '00:00',
+          },
+          extraItems: {
+            sleep: '00:00',
+            wakeUp: '00:00',
+          },
+          goals: [false, false]
+        }
+      },
+      {
+        name: 'Weight',
+        record: {
+          date: '',
+          isRecorded: false,
+          items: {
+            weight: 0
+          },
+          goals: [false,false]
+        }
+      },
+      {
+        name: 'Diet',
+        record: {
+          date: '',
+          isRecorded: false,
+          items: {
+            startTime: '00:00',
+            finishTime: '00:00',
+            lunchName: '',
+            lunchCalorie: 0,
+            dinnerName: '',
+            dinnerCalorie: 0,
+            extraName: '',
+            extraCalorie: 0
+          },
+          goals: [false,false]
+        }
+      },
+      {
+        name: 'Weight Training',
+        record: {
+          date: '',
+          isRecorded: false,
+          items: {
+            squat: 0,
+            pushUp: 0,
+            plank: 0,
+            burpeeTest: 0,
+          },
+          goals: [false,false]
+        }
+      }
+    ],
     default: [
       {
         name: 'Sleep',
@@ -34,6 +99,47 @@ export default new Vuex.Store({
         records: []
       },
       {
+        name: 'Weight',
+        info: {
+          items: {
+            weight: 'Weight (kg)',
+          },
+          goals: [
+            {
+              name: 'Check Weight everyday'
+            },
+            {
+              name: 'Make a weight 67.0kg'
+            }
+          ]
+        },
+        records: []
+      },
+      {
+        name: 'Diet',
+        info: {
+          items: {
+            startTime: 'Start ',
+            finishTime: 'Finish',
+            lunchName: 'Lunch (menu)',
+            lunchCalorie: 'Calorie (kcal)',
+            dinnerName: 'Dinner (menu)',
+            dinnerCalorie: 'Calorie (kcal)',
+            extraName: 'Extra (menu)',
+            extraCalorie: 'Calorie (kcal)'
+          },
+          goals: [
+            {
+              name: 'Intermittent Fasting (8 hours)'
+            },
+            {
+              name: 'Eat less than 2000 kcal'
+            }
+          ]
+        },
+        records: []
+      },
+      {
         name: 'Weight Training',
         info: {
           items: {
@@ -45,6 +151,9 @@ export default new Vuex.Store({
           goals: [
             {
               name: 'Weight training everyday'
+            },
+            {
+              name: 'Achieve the count of goals for each exercise'
             }
           ]
         },
@@ -56,63 +165,38 @@ export default new Vuex.Store({
     GET_DATE (state) {
       return state.date
     },
-    GET_SLEEP_INFO (state) {
-      const habitIdx = state.habit.findIndex(x => x.name === 'Sleep')
-      return { name: state.habit[habitIdx].name, info: state.habit[habitIdx].info }
-    },
-    GET_SLEEP_RECORD (state) {
-      const habitIdx = state.habit.findIndex(x => x.name === 'Sleep')
-      const recordIdx = state.habit[habitIdx].records.findIndex(x => x.date === state.date)
 
-      if (recordIdx === -1) {
-        return {
-          date: state.date,
-          isRecorded: false,
-          items: {
-            startDate: state.date,
-            startTime: '00:00',
-            finishDate: state.date,
-            finishTime: '00:00',
-          },
-          extraItems: {
-            sleep: '00:00',
-            wakeUp: '00:00',
-          },
-          goals: [false, false]
-        }
-      } else {
-        return state.habit[habitIdx].records[recordIdx]
-      }
+    GET_SLEEP_INFO (state) {
+      return getHabitInfo(state, 'Sleep')
+    },
+    GET_WEIGHT_INFO (state) {
+      return getHabitInfo(state, 'Weight')
+    },
+    GET_DIET_INFO (state) {
+      return getHabitInfo(state, 'Diet')
     },
     GET_WEIGHT_TRAINING_INFO (state) {
-      const habitIdx = state.habit.findIndex(x => x.name === 'Weight Training')
-      return { name: state.habit[habitIdx].name, info: state.habit[habitIdx].info }
+      return getHabitInfo(state, 'Weight Training')
+    },
+
+    GET_SLEEP_RECORD (state) {
+      return getHabitRecord(state, 'Sleep')
+    },
+    GET_WEIGHT_RECORD (state) {
+      return getHabitRecord(state, 'Weight')
+    },
+    GET_DIET_RECORD (state) {
+      return getHabitRecord(state, 'Diet')
     },
     GET_WEIGHT_TRAINING_RECORD (state) {
-      const habitIdx = state.habit.findIndex(x => x.name === 'Weight Training')
-      const recordIdx = state.habit[habitIdx].records.findIndex(x => x.date === state.date)
-
-      if (recordIdx === -1) {
-        return {
-          date: state.date,
-          isRecorded: false,
-          items: {
-            squat: 0,
-            pushUp: 0,
-            plank: 0,
-            burpeeTest: 0,
-          },
-          goals: [false]
-        }
-      } else {
-        return state.habit[habitIdx].records[recordIdx]
-      }
+      return getHabitRecord(state, 'Weight Training')
     }
   },
   mutations: {
     SET_DATE (state, args) {
       state.date = args
     },
+
     SET_DATA (state, args) {
       if (args === null) {
         state.habit = state.default
@@ -130,25 +214,9 @@ export default new Vuex.Store({
         state.habit = habit
       }
     },
-    SET_SLEEP_RECORD (state, args) {
-      const habitIdx = state.habit.findIndex(x => x.name === 'Sleep')
-      const recordIdx = state.habit[habitIdx].records.findIndex(x => x.date === state.date)
-
-      if (recordIdx === -1) {
-        state.habit[habitIdx].records.push(args)
-      } else {
-        state.habit[habitIdx].records[recordIdx] = args
-      }
-    },
-    SET_WEIGHT_TRAINING_RECORD (state, args) {
-      const habitIdx = state.habit.findIndex(x => x.name === 'Weight Training')
-      const recordIdx = state.habit[habitIdx].records.findIndex(x => x.date === state.date)
-
-      if (recordIdx === -1) {
-        state.habit[habitIdx].records.push(args)
-      } else {
-        state.habit[habitIdx].records[recordIdx] = args
-      }
+    
+    SET_RECORD (state, args) {
+      setHabitRecord(state, args.type, args.record)
     }
   },
   actions: {
@@ -156,16 +224,48 @@ export default new Vuex.Store({
       const data = loadDataFromLocalStorage(context.state.localStorageDataName)
       context.commit('SET_DATA', data)
     },
-    SAVE_SLEEP_RECORD (context, args) {
-      context.commit('SET_SLEEP_RECORD', args)
-      saveDataToLocalStorage(context.state.localStorageDataName, context.state.habit)
-    },
-    SAVE_WEIGHT_TRAINING_RECORD (context, args) {
-      context.commit('SET_WEIGHT_TRAINING_RECORD', args)
+
+    SAVE_RECORD (context, args) {
+      context.commit('SET_RECORD', args)
       saveDataToLocalStorage(context.state.localStorageDataName, context.state.habit)
     }
   }
 })
+
+const getHabitInfo = (state, habit) => {
+  const habitIdx = state.habit.findIndex(x => x.name === habit)
+  return { name: state.habit[habitIdx].name, info: state.habit[habitIdx].info }    
+}
+const getHabitRecord = (state, habit) => {
+  const habitIdx = state.habit.findIndex(x => x.name === habit)
+  const recordIdx = state.habit[habitIdx].records.findIndex(x => x.date === state.date)
+
+  if (recordIdx === -1) {
+    const defaultRecord = JSON.parse(JSON.stringify(state.defaultRecord.find(x => x.name === habit).record))
+    defaultRecord.date = state.date
+
+    switch (habit) {
+      case 'Sleep':
+        defaultRecord.items.startDate = state.date
+        defaultRecord.items.finishDate = state.date
+        break
+    }
+    return defaultRecord
+  } else {
+    return state.habit[habitIdx].records[recordIdx]
+  }
+}
+
+const setHabitRecord = (state, habit, record) => {
+  const habitIdx = state.habit.findIndex(x => x.name === habit)
+  const recordIdx = state.habit[habitIdx].records.findIndex(x => x.date === state.date)
+
+  if (recordIdx === -1) {
+    state.habit[habitIdx].records.push(record)
+  } else {
+    state.habit[habitIdx].records[recordIdx] = record
+  }
+}
 
 const loadDataFromLocalStorage = (name) => {
   return JSON.parse(localStorage.getItem(name))

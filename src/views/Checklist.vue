@@ -38,7 +38,86 @@
               <v-btn
                 icon
                 color="blue"
-                @click="sleepSaveButtonClicked"
+                @click="saveButtonClicked('Sleep')"
+              >
+                <v-icon>mdi-floppy</v-icon>
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-alert>
+      </v-col>
+
+      <!-- Weight -->
+      <v-col cols="12" class="d-flex justify-center align-center">
+        <v-alert
+          border="left"
+          colored-border
+          :type="weightRecord.isRecorded ? 'success' : 'error'"
+          elevation="2"
+          style="width:100%;"
+        >
+          <v-row no-gutters>
+            <v-col sm="4" cols="12" class="d-flex justify-start align-center">
+              {{weightInfo.name}}
+            </v-col>
+            <v-col sm="4" cols="12" class="d-flex justify-center align-center">
+              <value-input v-model="weightRecord.items.weight" :label="weightInfo.info.items.weight"></value-input>
+            </v-col>
+            <v-col offset-sm="11" sm="1" offset="8" cols="4" class="d-flex justify-end align-center">
+              <v-btn
+                icon
+                color="blue"
+                @click="saveButtonClicked('Weight')"
+              >
+                <v-icon>mdi-floppy</v-icon>
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-alert>
+      </v-col>
+
+      <!-- Sleep -->
+      <v-col cols="12" class="d-flex justify-center align-center">
+        <v-alert
+          border="left"
+          colored-border
+          :type="dietRecord.isRecorded ? 'success' : 'error'"
+          elevation="2"
+          style="width:100%;"
+        >
+          <v-row no-gutters>
+            <v-col sm="4" cols="12" class="d-flex justify-start align-center">
+              {{dietInfo.name}}
+            </v-col>
+            <v-col sm="4" cols="12" class="d-flex justify-center align-center">
+              <time-picker v-model="dietRecord.items.startTime" :label="dietInfo.info.items.startTime"></time-picker>
+            </v-col>
+            <v-col sm="4" cols="12" class="d-flex justify-center align-center">
+              <time-picker v-model="dietRecord.items.finishTime" :label="dietInfo.info.items.finishTime"></time-picker>
+            </v-col>
+            <v-col offset-sm="4" sm="4" cols="12" class="d-flex justify-center align-center">
+              <value-input v-model="dietRecord.items.lunchName" :label="dietInfo.info.items.lunchName"></value-input>
+            </v-col>
+            <v-col sm="4" cols="12" class="d-flex justify-center align-center">
+              <value-input v-model="dietRecord.items.lunchCalorie" :label="dietInfo.info.items.lunchCalorie"></value-input>
+            </v-col>
+            <v-col offset-sm="4" sm="4" cols="12" class="d-flex justify-center align-center">
+              <value-input v-model="dietRecord.items.dinnerName" :label="dietInfo.info.items.dinnerName"></value-input>
+            </v-col>
+            <v-col sm="4" cols="12" class="d-flex justify-center align-center">
+              <value-input v-model="dietRecord.items.dinnerCalorie" :label="dietInfo.info.items.dinnerCalorie"></value-input>
+            </v-col>
+            <v-col offset-sm="4" sm="4" cols="12" class="d-flex justify-center align-center">
+              <value-input v-model="dietRecord.items.extraName" :label="dietInfo.info.items.extraName"></value-input>
+            </v-col>
+            <v-col sm="4" cols="12" class="d-flex justify-center align-center">
+              <value-input v-model="dietRecord.items.extraCalorie" :label="dietInfo.info.items.extraCalorie"></value-input>
+            </v-col>
+            <v-col offset-sm="11" sm="1" offset="8" cols="4" class="d-flex justify-end align-center">
+              <v-btn
+                icon
+                color="blue"
+                @click="saveButtonClicked('Diet')"
               >
                 <v-icon>mdi-floppy</v-icon>
               </v-btn>
@@ -76,7 +155,7 @@
               <v-btn
                 icon
                 color="blue"
-                @click="weightTrainingSaveButtonClicked"
+                @click="saveButtonClicked('Weight Training')"
               >
                 <v-icon>mdi-floppy</v-icon>
               </v-btn>
@@ -109,9 +188,15 @@ export default {
   computed: {
     ...mapGetters ({
       dateFromStore: 'GET_DATE',
+
       sleepInfo: 'GET_SLEEP_INFO',
-      sleepRecord: 'GET_SLEEP_RECORD',
+      weightInfo: 'GET_WEIGHT_INFO',
+      dietInfo: 'GET_DIET_INFO',
       weightTrainingInfo: 'GET_WEIGHT_TRAINING_INFO',
+
+      sleepRecord: 'GET_SLEEP_RECORD',
+      weightRecord: 'GET_WEIGHT_RECORD',
+      dietRecord: 'GET_DIET_RECORD',
       weightTrainingRecord: 'GET_WEIGHT_TRAINING_RECORD'
     })
   },
@@ -131,27 +216,69 @@ export default {
       setDate: 'SET_DATE',
     }),
     ...mapActions ({
-      saveSleepRecord: 'SAVE_SLEEP_RECORD',
-      saveWeightTrainingRecord: 'SAVE_WEIGHT_TRAINING_RECORD'
+      saveRecord: 'SAVE_RECORD'
     }),
-    sleepSaveButtonClicked () {
-      const startDate = new Date(`${this.sleepRecord.items.startDate} ${this.sleepRecord.items.startTime}`)
-      const finishDate = new Date(`${this.sleepRecord.items.finishDate} ${this.sleepRecord.items.finishTime}`)
-      const sleep = Math.round((finishDate - startDate) / (1000 * 60 * 60) * 100) / 100
 
-      this.sleepRecord.isRecorded = true
-      this.sleepRecord.extraItems.sleep = sleep
-      this.sleepRecord.extraItems.wakeUp = this.sleepRecord.items.finishTime
-      this.sleepRecord.goals[0] = sleep > 6 ? true : false
-      this.sleepRecord.goals[1] = this.sleepRecord.extraItems.wakeUp <= '06:30' ? true : false
-      
-      this.saveSleepRecord(this.sleepRecord)
+    saveButtonClicked (type) {
+      let record
+
+      switch (type) {
+        case 'Sleep':
+          record = this.sleepRecord
+          break
+        case 'Weight':
+          record = this.weightRecord
+          break
+        case 'Diet':
+          record = this.dietRecord
+          break
+        case 'Weight Training':
+          record = this.weightTrainingRecord
+          break
+      }
+
+      this.updateRecordData(type, record)
+      this.saveRecord({ type: type, record: record})
     },
-    weightTrainingSaveButtonClicked () {
-      this.weightTrainingRecord.isRecorded = true
-      this.weightTrainingRecord.goals[0] = true
-      
-      this.saveWeightTrainingRecord(this.weightTrainingRecord)
+    updateRecordData (type, record) {
+      if (type === 'Sleep') {
+        const startDate = new Date(`${record.items.startDate} ${record.items.startTime}`)
+        const finishDate = new Date(`${record.items.finishDate} ${record.items.finishTime}`)
+        const sleep = Math.round((finishDate - startDate) / (1000 * 60 * 60) * 100) / 100
+
+        record.isRecorded = true
+        record.extraItems.sleep = sleep
+        record.extraItems.wakeUp = record.items.finishTime
+        record.goals[0] = sleep * 1 > 6 ? true : false
+        record.goals[1] = record.extraItems.wakeUp <= '06:30' ? true : false
+      } else if (type === 'Weight') {
+        record.isRecorded = true
+        record.goals[0] = true
+        record.goals[1] = record.items.weight * 1 <= 67
+      } else if (type === 'Diet') {
+        record.isRecorded = true
+
+        const startTime = new Date(`2020-12-06 ${record.items.startTime}`)
+        const finishTime = new Date(`2020-12-06 ${record.items.finishTime}`)
+        const time = finishTime - startTime
+        record.goals[0] = (time/1000/60) <= 480 // 8 hours
+
+        const totalCalorie = (record.items.lunchCalorie * 1) + (record.items.dinnerCalorie * 1) + (record.items.extraCalorie * 1)
+        record.goals[1] = totalCalorie <= 2000
+      }  else if (type === 'Weight Training') {
+        record.isRecorded = true
+        const isDone = record.items.squat * 1 > 0
+                              && record.items.pushUp * 1 > 0
+                              && record.items.plank * 1 > 0
+                              && record.items.burpeeTest * 1 > 0
+        record.goals[0] = isDone
+
+        const isGoalAchieved = record.items.squat * 1 >= 200
+                              && record.items.pushUp * 1 >= 100
+                              && record.items.plank * 1 >= 300
+                              && record.items.burpeeTest * 1 >= 100
+        record.goals[1] = isGoalAchieved
+      }
     }
   }
 }
