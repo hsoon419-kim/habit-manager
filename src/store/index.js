@@ -73,6 +73,20 @@ export default new Vuex.Store({
           },
           goals: [false,false]
         }
+      },
+      {
+        name: 'SW Development',
+        record: {
+          date: '',
+          isRecorded: false,
+          items: {
+            study: '',
+            studyTime: 0,
+            service: '',
+            serviceTime: 0,
+          },
+          goals: [false]
+        }
       }
     ],
     default: [
@@ -160,6 +174,23 @@ export default new Vuex.Store({
           ]
         },
         records: []
+      },
+      {
+        name: 'SW Development',
+        info: {
+          items: {
+            study: 'Study (details)',
+            studyTime: 'Study (hours)',
+            service: 'Service (details)',
+            serviceTime: 'Service (hours)',
+          },
+          goals: [
+            {
+              name: 'SW Development everyday'
+            }
+          ]
+        },
+        records: []
       }
     ]
   },
@@ -180,6 +211,9 @@ export default new Vuex.Store({
     GET_WEIGHT_TRAINING_INFO (state) {
       return getHabitInfo(state, 'Weight Training')
     },
+    GET_SW_DEVELOPMENT_INFO (state) {
+      return getHabitInfo(state, 'SW Development')
+    },
 
     GET_SLEEP_RECORD (state) {
       return getHabitRecord(state, 'Sleep')
@@ -192,6 +226,9 @@ export default new Vuex.Store({
     },
     GET_WEIGHT_TRAINING_RECORD (state) {
       return getHabitRecord(state, 'Weight Training')
+    },
+    GET_SW_DEVELOPMENT_RECORD (state) {
+      return getHabitRecord(state, 'SW Development')
     }
   },
   mutations: {
@@ -240,6 +277,8 @@ const getHabitInfo = (state, habit) => {
 }
 const getHabitRecord = (state, habit) => {
   const habitIdx = state.habit.findIndex(x => x.name === habit)
+  console.log(habit)
+  console.log(habitIdx)
   const recordIdx = state.habit[habitIdx].records.findIndex(x => x.date === state.date)
 
   if (recordIdx === -1) {

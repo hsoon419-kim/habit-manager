@@ -164,6 +164,44 @@
         </v-alert>
       </v-col>
 
+      <!-- SW Development -->
+      <v-col cols="12" class="d-flex justify-center align-center">
+        <v-alert
+          border="left"
+          colored-border
+          :type="swDevelopmentRecord.isRecorded ? 'success' : 'error'"
+          elevation="2"
+          style="width:100%;"
+        >
+          <v-row no-gutters>
+            <v-col sm="4" cols="12" class="d-flex justify-start align-center">
+              {{swDevelopmentInfo.name}}
+            </v-col>
+            <v-col sm="4" cols="12" class="d-flex justify-center align-center">
+              <value-input v-model="swDevelopmentRecord.items.study" :label="swDevelopmentInfo.info.items.study"></value-input>
+            </v-col>
+            <v-col sm="4" cols="12" class="d-flex justify-center align-center">
+              <value-input v-model="swDevelopmentRecord.items.studyTime" :label="swDevelopmentInfo.info.items.studyTime"></value-input>
+            </v-col>
+            <v-col offset-sm="4" sm="4" cols="12" class="d-flex justify-center align-center">
+              <value-input v-model="swDevelopmentRecord.items.service" :label="swDevelopmentInfo.info.items.service"></value-input>
+            </v-col>
+            <v-col sm="4" cols="12" class="d-flex justify-center align-center">
+              <value-input v-model="swDevelopmentRecord.items.serviceTime" :label="swDevelopmentInfo.info.items.serviceTime"></value-input>
+            </v-col>
+            <v-col offset-sm="11" sm="1" offset="8" cols="4" class="d-flex justify-end align-center">
+              <v-btn
+                icon
+                color="blue"
+                @click="saveButtonClicked('SW Development')"
+              >
+                <v-icon>mdi-floppy</v-icon>
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-alert>
+      </v-col>
+
     </v-row>
   </v-container>
 </template>
@@ -193,11 +231,13 @@ export default {
       weightInfo: 'GET_WEIGHT_INFO',
       dietInfo: 'GET_DIET_INFO',
       weightTrainingInfo: 'GET_WEIGHT_TRAINING_INFO',
+      swDevelopmentInfo: 'GET_SW_DEVELOPMENT_INFO',
 
       sleepRecord: 'GET_SLEEP_RECORD',
       weightRecord: 'GET_WEIGHT_RECORD',
       dietRecord: 'GET_DIET_RECORD',
-      weightTrainingRecord: 'GET_WEIGHT_TRAINING_RECORD'
+      weightTrainingRecord: 'GET_WEIGHT_TRAINING_RECORD',
+      swDevelopmentRecord: 'GET_SW_DEVELOPMENT_RECORD'
     })
   },
   watch : {
@@ -235,6 +275,9 @@ export default {
         case 'Weight Training':
           record = this.weightTrainingRecord
           break
+        case 'SW Development':
+          record = this.swDevelopmentRecord
+          break
       }
 
       this.updateRecordData(type, record)
@@ -265,7 +308,7 @@ export default {
 
         const totalCalorie = (record.items.lunchCalorie * 1) + (record.items.dinnerCalorie * 1) + (record.items.extraCalorie * 1)
         record.goals[1] = totalCalorie <= 2000
-      }  else if (type === 'Weight Training') {
+      } else if (type === 'Weight Training') {
         record.isRecorded = true
         const isDone = record.items.squat * 1 > 0
                               && record.items.pushUp * 1 > 0
@@ -278,6 +321,10 @@ export default {
                               && record.items.plank * 1 >= 300
                               && record.items.burpeeTest * 1 >= 100
         record.goals[1] = isGoalAchieved
+      } else if (type === 'SW Development') {
+        record.isRecorded = true
+        const isDone = (record.items.studyTime * 1) + (record.items.serviceTime * 1) > 0
+        record.goals[0] = isDone
       }
     }
   }
