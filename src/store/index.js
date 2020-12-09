@@ -9,6 +9,8 @@ export default new Vuex.Store({
     date: moment().tz(moment.tz.guess()).format('YYYY-MM-DD'),
 
     localStorageDataName: 'habit-manager-data',
+    
+    habit: [],
 
     defaultRecord: [
       {
