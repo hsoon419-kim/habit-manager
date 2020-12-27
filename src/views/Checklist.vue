@@ -178,22 +178,54 @@
               {{swDevelopmentInfo.name}}
             </v-col>
             <v-col sm="4" cols="12" class="d-flex justify-center align-center">
-              <value-input v-model="swDevelopmentRecord.items.study" :label="swDevelopmentInfo.info.items.study"></value-input>
+              <value-input v-model="swDevelopmentRecord.items.item" :label="swDevelopmentInfo.info.items.item"></value-input>
             </v-col>
             <v-col sm="4" cols="12" class="d-flex justify-center align-center">
-              <value-input v-model="swDevelopmentRecord.items.studyTime" :label="swDevelopmentInfo.info.items.studyTime"></value-input>
+              <value-input v-model="swDevelopmentRecord.items.time" :label="swDevelopmentInfo.info.items.time"></value-input>
             </v-col>
-            <v-col offset-sm="4" sm="4" cols="12" class="d-flex justify-center align-center">
-              <value-input v-model="swDevelopmentRecord.items.service" :label="swDevelopmentInfo.info.items.service"></value-input>
-            </v-col>
-            <v-col sm="4" cols="12" class="d-flex justify-center align-center">
-              <value-input v-model="swDevelopmentRecord.items.serviceTime" :label="swDevelopmentInfo.info.items.serviceTime"></value-input>
+            <v-col offset-sm="4" sm="8" cols="12" class="d-flex justify-center align-center">
+              <value-input v-model="swDevelopmentRecord.items.detail" :label="swDevelopmentInfo.info.items.detail"></value-input>
             </v-col>
             <v-col offset-sm="11" sm="1" offset="8" cols="4" class="d-flex justify-end align-center">
               <v-btn
                 icon
                 color="blue"
                 @click="saveButtonClicked('SW Development')"
+              >
+                <v-icon>mdi-floppy</v-icon>
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-alert>
+      </v-col>
+
+      <!-- English -->
+      <v-col cols="12" class="d-flex justify-center align-center">
+        <v-alert
+          border="left"
+          colored-border
+          :type="englishRecord.isRecorded ? 'success' : 'error'"
+          elevation="2"
+          style="width:100%;"
+        >
+          <v-row no-gutters>
+            <v-col sm="4" cols="12" class="d-flex justify-start align-center">
+              {{englishInfo.name}}
+            </v-col>
+            <v-col sm="4" cols="12" class="d-flex justify-center align-center">
+              <value-input v-model="englishRecord.items.item" :label="englishInfo.info.items.item"></value-input>
+            </v-col>
+            <v-col sm="4" cols="12" class="d-flex justify-center align-center">
+              <value-input v-model="englishRecord.items.time" :label="englishInfo.info.items.time"></value-input>
+            </v-col>
+            <v-col offset-sm="4" sm="8" cols="12" class="d-flex justify-center align-center">
+              <value-input v-model="englishRecord.items.detail" :label="englishInfo.info.items.detail"></value-input>
+            </v-col>
+            <v-col offset-sm="11" sm="1" offset="8" cols="4" class="d-flex justify-end align-center">
+              <v-btn
+                icon
+                color="blue"
+                @click="saveButtonClicked('English')"
               >
                 <v-icon>mdi-floppy</v-icon>
               </v-btn>
@@ -232,12 +264,14 @@ export default {
       dietInfo: 'GET_DIET_INFO',
       weightTrainingInfo: 'GET_WEIGHT_TRAINING_INFO',
       swDevelopmentInfo: 'GET_SW_DEVELOPMENT_INFO',
+      englishInfo: 'GET_ENGLISH_INFO',
 
       sleepRecord: 'GET_SLEEP_RECORD',
       weightRecord: 'GET_WEIGHT_RECORD',
       dietRecord: 'GET_DIET_RECORD',
       weightTrainingRecord: 'GET_WEIGHT_TRAINING_RECORD',
-      swDevelopmentRecord: 'GET_SW_DEVELOPMENT_RECORD'
+      swDevelopmentRecord: 'GET_SW_DEVELOPMENT_RECORD',
+      englishRecord: 'GET_ENGLISH_RECORD'
     })
   },
   watch : {
@@ -278,6 +312,9 @@ export default {
         case 'SW Development':
           record = this.swDevelopmentRecord
           break
+        case 'English':
+          record = this.englishRecord
+          break
       }
 
       this.updateRecordData(type, record)
@@ -297,7 +334,7 @@ export default {
       } else if (type === 'Weight') {
         record.isRecorded = true
         record.goals[0] = true
-        record.goals[1] = record.items.weight * 1 <= 67
+        record.goals[1] = record.items.weight * 1 <= 70
       } else if (type === 'Diet') {
         record.isRecorded = true
 
@@ -323,7 +360,11 @@ export default {
         record.goals[1] = isGoalAchieved
       } else if (type === 'SW Development') {
         record.isRecorded = true
-        const isDone = (record.items.studyTime * 1) + (record.items.serviceTime * 1) > 0
+        const isDone = (record.items.time * 1) > 0
+        record.goals[0] = isDone
+      } else if (type === 'English') {
+        record.isRecorded = true
+        const isDone = (record.items.time * 1) > 0
         record.goals[0] = isDone
       }
     }

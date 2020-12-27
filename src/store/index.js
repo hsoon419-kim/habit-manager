@@ -80,10 +80,22 @@ export default new Vuex.Store({
           date: '',
           isRecorded: false,
           items: {
-            study: '',
-            studyTime: 0,
-            service: '',
-            serviceTime: 0,
+            item: '',
+            time: 0,
+            detail: ''
+          },
+          goals: [false]
+        }
+      },
+      {
+        name: 'English',
+        record: {
+          date: '',
+          isRecorded: false,
+          items: {
+            item: '',
+            time: 0,
+            detail: ''
           },
           goals: [false]
         }
@@ -122,10 +134,10 @@ export default new Vuex.Store({
           },
           goals: [
             {
-              name: 'Check Weight everyday'
+              name: 'Check weight'
             },
             {
-              name: 'Make a weight 67.0kg'
+              name: 'Make a weight 70.0kg'
             }
           ]
         },
@@ -166,7 +178,7 @@ export default new Vuex.Store({
           },
           goals: [
             {
-              name: 'Weight training everyday'
+              name: 'Weight training'
             },
             {
               name: 'Achieve the count of goals for each exercise'
@@ -179,14 +191,29 @@ export default new Vuex.Store({
         name: 'SW Development',
         info: {
           items: {
-            study: 'Study (details)',
-            studyTime: 'Study (hours)',
-            service: 'Service (details)',
-            serviceTime: 'Service (hours)',
+            item: 'Item',
+            time: 'Time (hours)',
+            detail: 'Detail',
           },
           goals: [
             {
-              name: 'SW Development everyday'
+              name: 'Study'
+            }
+          ]
+        },
+        records: []
+      },
+      {
+        name: 'English',
+        info: {
+          items: {
+            item: 'Item',
+            time: 'Time (hours)',
+            detail: 'Detail',
+          },
+          goals: [
+            {
+              name: 'Study'
             }
           ]
         },
@@ -214,6 +241,9 @@ export default new Vuex.Store({
     GET_SW_DEVELOPMENT_INFO (state) {
       return getHabitInfo(state, 'SW Development')
     },
+    GET_ENGLISH_INFO (state) {
+      return getHabitInfo(state, 'English')
+    },
 
     GET_SLEEP_RECORD (state) {
       return getHabitRecord(state, 'Sleep')
@@ -229,6 +259,28 @@ export default new Vuex.Store({
     },
     GET_SW_DEVELOPMENT_RECORD (state) {
       return getHabitRecord(state, 'SW Development')
+    },
+    GET_ENGLISH_RECORD (state) {
+      return getHabitRecord(state, 'English')
+    },
+
+    GET_VIEW_COLUMN_DEFS (state) {
+      let columnDefs = []
+
+      columnDefs.push({ headerName: 'Date', field: 'Date' })
+
+      state.habit.forEach (x => {
+        let group = { headerName: x.name, children: [] }
+
+        x.info.goals.forEach((item, index) => {
+          const col = `${x.name}-${index+1}`
+          group.children.push({ headerName: col, field: col, cellClass: (params) => params.value ? 'cell-class-o' : 'cell-class-x' })
+        })
+
+        columnDefs.push(group)
+      })
+
+      return columnDefs
     }
   },
   mutations: {
@@ -277,8 +329,6 @@ const getHabitInfo = (state, habit) => {
 }
 const getHabitRecord = (state, habit) => {
   const habitIdx = state.habit.findIndex(x => x.name === habit)
-  console.log(habit)
-  console.log(habitIdx)
   const recordIdx = state.habit[habitIdx].records.findIndex(x => x.date === state.date)
 
   if (recordIdx === -1) {
