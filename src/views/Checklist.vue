@@ -126,36 +126,36 @@
         </v-alert>
       </v-col>
 
-      <!-- Weight Training -->
+      <!-- Exercise -->
       <v-col cols="12" class="d-flex justify-center align-center">
         <v-alert
           border="left"
           colored-border
-          :type="weightTrainingRecord.isRecorded ? 'success' : 'error'"
+          :type="ExerciseRecord.isRecorded ? 'success' : 'error'"
           elevation="2"
           style="width:100%;"
         >
           <v-row no-gutters>
             <v-col sm="4" cols="12" class="d-flex justify-start align-center">
-              {{weightTrainingInfo.name}}
+              {{exerciseInfo.name}}
             </v-col>
             <v-col sm="4" cols="12" class="d-flex justify-center align-center">
-              <value-input v-model="weightTrainingRecord.items.squat" :label="weightTrainingInfo.info.items.squat"></value-input>
+              <value-input v-model="ExerciseRecord.items.squat" :label="exerciseInfo.info.items.squat"></value-input>
             </v-col>
             <v-col sm="4" cols="12" class="d-flex justify-center align-center">
-              <value-input v-model="weightTrainingRecord.items.pushUp" :label="weightTrainingInfo.info.items.pushUp"></value-input>
+              <value-input v-model="ExerciseRecord.items.pushUp" :label="exerciseInfo.info.items.pushUp"></value-input>
             </v-col>
             <v-col offset-sm="4" sm="4" cols="12" class="d-flex justify-center align-center">
-              <value-input v-model="weightTrainingRecord.items.plank" :label="weightTrainingInfo.info.items.plank"></value-input>
+              <value-input v-model="ExerciseRecord.items.plank" :label="exerciseInfo.info.items.plank"></value-input>
             </v-col>
             <v-col sm="4" cols="12" class="d-flex justify-center align-center">
-              <value-input v-model="weightTrainingRecord.items.burpeeTest" :label="weightTrainingInfo.info.items.burpeeTest"></value-input>
+              <value-input v-model="ExerciseRecord.items.burpeeTest" :label="exerciseInfo.info.items.burpeeTest"></value-input>
             </v-col>
             <v-col offset-sm="11" sm="1" offset="8" cols="4" class="d-flex justify-end align-center">
               <v-btn
                 icon
                 color="blue"
-                @click="saveButtonClicked('Weight Training')"
+                @click="saveButtonClicked('Exercise')"
               >
                 <v-icon>mdi-floppy</v-icon>
               </v-btn>
@@ -164,33 +164,33 @@
         </v-alert>
       </v-col>
 
-      <!-- SW Development -->
+      <!-- SW -->
       <v-col cols="12" class="d-flex justify-center align-center">
         <v-alert
           border="left"
           colored-border
-          :type="swDevelopmentRecord.isRecorded ? 'success' : 'error'"
+          :type="swRecord.isRecorded ? 'success' : 'error'"
           elevation="2"
           style="width:100%;"
         >
           <v-row no-gutters>
             <v-col sm="4" cols="12" class="d-flex justify-start align-center">
-              {{swDevelopmentInfo.name}}
+              {{swInfo.name}}
             </v-col>
             <v-col sm="4" cols="12" class="d-flex justify-center align-center">
-              <value-input v-model="swDevelopmentRecord.items.item" :label="swDevelopmentInfo.info.items.item"></value-input>
+              <value-input v-model="swRecord.items.item" :label="swInfo.info.items.item"></value-input>
             </v-col>
             <v-col sm="4" cols="12" class="d-flex justify-center align-center">
-              <value-input v-model="swDevelopmentRecord.items.time" :label="swDevelopmentInfo.info.items.time"></value-input>
+              <value-input v-model="swRecord.items.time" :label="swInfo.info.items.time"></value-input>
             </v-col>
             <v-col offset-sm="4" sm="8" cols="12" class="d-flex justify-center align-center">
-              <value-input v-model="swDevelopmentRecord.items.detail" :label="swDevelopmentInfo.info.items.detail"></value-input>
+              <value-input v-model="swRecord.items.detail" :label="swInfo.info.items.detail"></value-input>
             </v-col>
             <v-col offset-sm="11" sm="1" offset="8" cols="4" class="d-flex justify-end align-center">
               <v-btn
                 icon
                 color="blue"
-                @click="saveButtonClicked('SW Development')"
+                @click="saveButtonClicked('SW')"
               >
                 <v-icon>mdi-floppy</v-icon>
               </v-btn>
@@ -262,15 +262,15 @@ export default {
       sleepInfo: 'GET_SLEEP_INFO',
       weightInfo: 'GET_WEIGHT_INFO',
       dietInfo: 'GET_DIET_INFO',
-      weightTrainingInfo: 'GET_WEIGHT_TRAINING_INFO',
-      swDevelopmentInfo: 'GET_SW_DEVELOPMENT_INFO',
+      exerciseInfo: 'GET_EXERCISE_INFO',
+      swInfo: 'GET_SW_INFO',
       englishInfo: 'GET_ENGLISH_INFO',
 
       sleepRecord: 'GET_SLEEP_RECORD',
       weightRecord: 'GET_WEIGHT_RECORD',
       dietRecord: 'GET_DIET_RECORD',
-      weightTrainingRecord: 'GET_WEIGHT_TRAINING_RECORD',
-      swDevelopmentRecord: 'GET_SW_DEVELOPMENT_RECORD',
+      ExerciseRecord: 'GET_EXERCISE_RECORD',
+      swRecord: 'GET_SW_RECORD',
       englishRecord: 'GET_ENGLISH_RECORD'
     })
   },
@@ -306,11 +306,11 @@ export default {
         case 'Diet':
           record = this.dietRecord
           break
-        case 'Weight Training':
-          record = this.weightTrainingRecord
+        case 'Exercise':
+          record = this.ExerciseRecord
           break
-        case 'SW Development':
-          record = this.swDevelopmentRecord
+        case 'SW':
+          record = this.swRecord
           break
         case 'English':
           record = this.englishRecord
@@ -345,7 +345,7 @@ export default {
 
         const totalCalorie = (record.items.lunchCalorie * 1) + (record.items.dinnerCalorie * 1) + (record.items.extraCalorie * 1)
         record.goals[1] = totalCalorie <= 2000
-      } else if (type === 'Weight Training') {
+      } else if (type === 'Exercise') {
         record.isRecorded = true
         const isDone = record.items.squat * 1 > 0
                               && record.items.pushUp * 1 > 0
@@ -358,7 +358,7 @@ export default {
                               && record.items.plank * 1 >= 300
                               && record.items.burpeeTest * 1 >= 100
         record.goals[1] = isGoalAchieved
-      } else if (type === 'SW Development') {
+      } else if (type === 'SW') {
         record.isRecorded = true
         const isDone = (record.items.time * 1) > 0
         record.goals[0] = isDone

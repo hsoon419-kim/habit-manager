@@ -75,7 +75,8 @@
       drawer: null,
       items: [
         { icon: 'mdi-playlist-check ', text: 'Checklist', link: '/checklist' },
-        { icon: 'mdi-history ', text: 'History', link: '/history' }
+        { icon: 'mdi-history ', text: 'History', link: '/history' },
+        { icon: 'mdi-view-dashboard  ', text: 'Dashboard', link: '/dashboard' }
       ],
       exportDialog: false,
       importDialog: false

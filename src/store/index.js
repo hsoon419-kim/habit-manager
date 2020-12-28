@@ -61,7 +61,7 @@ export default new Vuex.Store({
         }
       },
       {
-        name: 'Weight Training',
+        name: 'Exercise',
         record: {
           date: '',
           isRecorded: false,
@@ -75,7 +75,7 @@ export default new Vuex.Store({
         }
       },
       {
-        name: 'SW Development',
+        name: 'SW',
         record: {
           date: '',
           isRecorded: false,
@@ -168,7 +168,7 @@ export default new Vuex.Store({
         records: []
       },
       {
-        name: 'Weight Training',
+        name: 'Exercise',
         info: {
           items: {
             squat: 'Squat (count)',
@@ -178,7 +178,7 @@ export default new Vuex.Store({
           },
           goals: [
             {
-              name: 'Weight training'
+              name: 'Exercise'
             },
             {
               name: 'Achieve the count of goals for each exercise'
@@ -188,7 +188,7 @@ export default new Vuex.Store({
         records: []
       },
       {
-        name: 'SW Development',
+        name: 'SW',
         info: {
           items: {
             item: 'Item',
@@ -239,11 +239,11 @@ export default new Vuex.Store({
     GET_DIET_INFO (state) {
       return getHabitInfo(state, 'Diet')
     },
-    GET_WEIGHT_TRAINING_INFO (state) {
-      return getHabitInfo(state, 'Weight Training')
+    GET_EXERCISE_INFO (state) {
+      return getHabitInfo(state, 'Exercise')
     },
-    GET_SW_DEVELOPMENT_INFO (state) {
-      return getHabitInfo(state, 'SW Development')
+    GET_SW_INFO (state) {
+      return getHabitInfo(state, 'SW')
     },
     GET_ENGLISH_INFO (state) {
       return getHabitInfo(state, 'English')
@@ -258,11 +258,11 @@ export default new Vuex.Store({
     GET_DIET_RECORD (state) {
       return getHabitRecord(state, 'Diet')
     },
-    GET_WEIGHT_TRAINING_RECORD (state) {
-      return getHabitRecord(state, 'Weight Training')
+    GET_EXERCISE_RECORD (state) {
+      return getHabitRecord(state, 'Exercise')
     },
-    GET_SW_DEVELOPMENT_RECORD (state) {
-      return getHabitRecord(state, 'SW Development')
+    GET_SW_RECORD (state) {
+      return getHabitRecord(state, 'SW')
     },
     GET_ENGLISH_RECORD (state) {
       return getHabitRecord(state, 'English')
@@ -285,6 +285,10 @@ export default new Vuex.Store({
       })
 
       return columnDefs
+    },
+
+    GET_HABIT (state) {
+      return state.habit
     }
   },
   mutations: {
