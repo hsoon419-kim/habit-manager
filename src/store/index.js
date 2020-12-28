@@ -326,9 +326,8 @@ export default new Vuex.Store({
     },
 
     UPLOAD_DATA (context, args) {
-      console.log(args)
-      // context.commit('SET_DATA', args)
-      // saveDataToLocalStorage(context.state.localStorageDataName, context.state.habit)
+      context.commit('SET_DATA', args)
+      saveDataToLocalStorage(context.state.localStorageDataName, context.state.habit)
     }
   }
 })
