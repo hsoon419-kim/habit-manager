@@ -222,6 +222,10 @@ export default new Vuex.Store({
     ]
   },
   getters: {
+    GET_DATA (state) {
+      return JSON.stringify(state.habit)
+    },
+
     GET_DATE (state) {
       return state.date
     },
@@ -319,6 +323,12 @@ export default new Vuex.Store({
     SAVE_RECORD (context, args) {
       context.commit('SET_RECORD', args)
       saveDataToLocalStorage(context.state.localStorageDataName, context.state.habit)
+    },
+
+    UPLOAD_DATA (context, args) {
+      console.log(args)
+      // context.commit('SET_DATA', args)
+      // saveDataToLocalStorage(context.state.localStorageDataName, context.state.habit)
     }
   }
 })
