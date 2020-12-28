@@ -71,10 +71,10 @@ export default {
       },
       gridOptions: {},
       columnDefs: [
-        { headerName: 'date', field: 'date' },
-        { headerName: 'item', field: 'item' },
-        { headerName: 'detail', field: 'detail' },
-        { headerName: 'time', field: 'time' }
+        { headerName: 'date', field: 'date', width:150 },
+        { headerName: 'item', field: 'item', width:150 },
+        { headerName: 'detail', field: 'detail', width:150 },
+        { headerName: 'time', field: 'time', width:100 }
       ],
       rowData: []
     }
@@ -89,7 +89,7 @@ export default {
     })
 
     this.chartOptions.series[0].data = chartData
-    this.total = chartData.reduce((a, b) => a+b)
+    this.total = chartData.length === 0 ? 0 : chartData.reduce((a, b) => a+b)
 
     this.rowData = gridData
   }
