@@ -74,9 +74,10 @@
     data: () => ({
       drawer: null,
       items: [
-        { icon: 'mdi-playlist-check ', text: 'Checklist', link: '/checklist' },
-        { icon: 'mdi-history ', text: 'History', link: '/history' },
-        { icon: 'mdi-view-dashboard  ', text: 'Dashboard', link: '/dashboard' }
+        { icon: 'mdi-playlist-check', text: 'Checklist', link: '/checklist' },
+        { icon: 'mdi-history', text: 'History', link: '/history' },
+        { icon: 'mdi-view-dashboard', text: 'Dashboard', link: '/dashboard' },
+        { icon: 'mdi-chart-timeline-variant', text: 'Analysis', link: '/analysis' }
       ],
       exportDialog: false,
       importDialog: false
