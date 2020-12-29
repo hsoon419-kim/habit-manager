@@ -7,14 +7,14 @@
     >
       <v-card>
         <v-card-title>
-          Download
+          Upload
         </v-card-title>
 
         <v-card-text>
-          <v-textarea
-            solo
-            v-model="data"
-          ></v-textarea>
+          <v-file-input
+            label="Data file input"
+            @change="change"
+          ></v-file-input>
         </v-card-text>
 
         <v-card-actions>
@@ -54,15 +54,23 @@
     },
     data () {
       return {
-        data: ''
+        file: null
       }
     },
     methods: {
       ...mapActions ({
         uploadData: 'UPLOAD_DATA'
       }),
+      change (file) {
+        this.file = file
+      },
       ok () {
-        this.uploadData(JSON.parse(this.data))
+        if (this.file !== null) {
+          const reader = new FileReader()
+          reader.onload = e => this.uploadData(JSON.parse(e.target.result))
+          reader.readAsText(this.file)
+        }
+
         this.$emit('change', false)
       },
       cancel () {
