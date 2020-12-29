@@ -134,7 +134,7 @@ export default new Vuex.Store({
           },
           goals: [
             {
-              name: 'Check weight'
+              name: 'Check a weight'
             },
             {
               name: 'Make a weight 70.0kg'
@@ -158,7 +158,7 @@ export default new Vuex.Store({
           },
           goals: [
             {
-              name: 'Intermittent Fasting (8 hours)'
+              name: 'Intermittent Fasting (8H)'
             },
             {
               name: 'Eat less than 2000 kcal'
@@ -181,7 +181,7 @@ export default new Vuex.Store({
               name: 'Exercise'
             },
             {
-              name: 'Achieve the count of goals for each exercise'
+              name: 'Achieve the count of goals'
             }
           ]
         },
@@ -271,14 +271,14 @@ export default new Vuex.Store({
     GET_VIEW_COLUMN_DEFS (state) {
       let columnDefs = []
 
-      columnDefs.push({ headerName: 'Date', field: 'Date' })
+      columnDefs.push({ headerName: 'Date', field: 'Date', pinned: 'left' })
 
       state.habit.forEach (x => {
         let group = { headerName: x.name, children: [] }
 
         x.info.goals.forEach((item, index) => {
           const col = `${x.name}-${index+1}`
-          group.children.push({ headerName: col, field: col, cellClass: (params) => params.value ? 'cell-class-o' : 'cell-class-x' })
+          group.children.push({ headerName: item.name, field: col, cellClass: (params) => params.value ? 'cell-class-o' : 'cell-class-x' })
         })
 
         columnDefs.push(group)

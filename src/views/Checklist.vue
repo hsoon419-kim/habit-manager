@@ -3,14 +3,15 @@
 
     <!-- Date -->
     <v-row>
-      <v-col cols="12" class="d-flex justify-center align-center">
+      <v-col cols="12">
         <date-picker v-model="date"></date-picker>
       </v-col>
     </v-row>
 
-    <v-row class="justify-center align-center">
+    <!-- Items -->
+    <v-row>
       <!-- Sleep -->
-      <v-col cols="12" class="d-flex justify-center align-center">
+      <v-col cols="12">
         <v-alert
           border="left"
           colored-border
@@ -48,7 +49,7 @@
       </v-col>
 
       <!-- Weight -->
-      <v-col cols="12" class="d-flex justify-center align-center">
+      <v-col cols="12">
         <v-alert
           border="left"
           colored-border
@@ -76,8 +77,8 @@
         </v-alert>
       </v-col>
 
-      <!-- Sleep -->
-      <v-col cols="12" class="d-flex justify-center align-center">
+      <!-- Diet -->
+      <v-col cols="12">
         <v-alert
           border="left"
           colored-border
@@ -127,11 +128,11 @@
       </v-col>
 
       <!-- Exercise -->
-      <v-col cols="12" class="d-flex justify-center align-center">
+      <v-col cols="12">
         <v-alert
           border="left"
           colored-border
-          :type="ExerciseRecord.isRecorded ? 'success' : 'error'"
+          :type="exerciseRecord.isRecorded ? 'success' : 'error'"
           elevation="2"
           style="width:100%;"
         >
@@ -140,16 +141,16 @@
               {{exerciseInfo.name}}
             </v-col>
             <v-col sm="4" cols="12" class="d-flex justify-center align-center">
-              <value-input v-model="ExerciseRecord.items.squat" :label="exerciseInfo.info.items.squat"></value-input>
+              <value-input v-model="exerciseRecord.items.squat" :label="exerciseInfo.info.items.squat"></value-input>
             </v-col>
             <v-col sm="4" cols="12" class="d-flex justify-center align-center">
-              <value-input v-model="ExerciseRecord.items.pushUp" :label="exerciseInfo.info.items.pushUp"></value-input>
+              <value-input v-model="exerciseRecord.items.pushUp" :label="exerciseInfo.info.items.pushUp"></value-input>
             </v-col>
             <v-col offset-sm="4" sm="4" cols="12" class="d-flex justify-center align-center">
-              <value-input v-model="ExerciseRecord.items.plank" :label="exerciseInfo.info.items.plank"></value-input>
+              <value-input v-model="exerciseRecord.items.plank" :label="exerciseInfo.info.items.plank"></value-input>
             </v-col>
             <v-col sm="4" cols="12" class="d-flex justify-center align-center">
-              <value-input v-model="ExerciseRecord.items.burpeeTest" :label="exerciseInfo.info.items.burpeeTest"></value-input>
+              <value-input v-model="exerciseRecord.items.burpeeTest" :label="exerciseInfo.info.items.burpeeTest"></value-input>
             </v-col>
             <v-col offset-sm="11" sm="1" offset="8" cols="4" class="d-flex justify-end align-center">
               <v-btn
@@ -165,7 +166,7 @@
       </v-col>
 
       <!-- SW -->
-      <v-col cols="12" class="d-flex justify-center align-center">
+      <v-col cols="12">
         <v-alert
           border="left"
           colored-border
@@ -200,7 +201,7 @@
       </v-col>
 
       <!-- English -->
-      <v-col cols="12" class="d-flex justify-center align-center">
+      <v-col cols="12">
         <v-alert
           border="left"
           colored-border
@@ -235,6 +236,7 @@
       </v-col>
 
     </v-row>
+
   </v-container>
 </template>
 
@@ -269,7 +271,7 @@ export default {
       sleepRecord: 'GET_SLEEP_RECORD',
       weightRecord: 'GET_WEIGHT_RECORD',
       dietRecord: 'GET_DIET_RECORD',
-      ExerciseRecord: 'GET_EXERCISE_RECORD',
+      exerciseRecord: 'GET_EXERCISE_RECORD',
       swRecord: 'GET_SW_RECORD',
       englishRecord: 'GET_ENGLISH_RECORD'
     })
@@ -307,7 +309,7 @@ export default {
           record = this.dietRecord
           break
         case 'Exercise':
-          record = this.ExerciseRecord
+          record = this.exerciseRecord
           break
         case 'SW':
           record = this.swRecord
@@ -329,42 +331,43 @@ export default {
         record.isRecorded = true
         record.extraItems.sleep = sleep
         record.extraItems.wakeUp = record.items.finishTime
-        record.goals[0] = sleep * 1 > 6 ? true : false
-        record.goals[1] = record.extraItems.wakeUp <= '06:30' ? true : false
+        record.goals[0] = record.extraItems.sleep >= 6
+        record.goals[1] = record.extraItems.wakeUp <= '06:30'
       } else if (type === 'Weight') {
         record.isRecorded = true
-        record.goals[0] = true
+        record.goals[0] = record.items.weight !== '-'
         record.goals[1] = record.items.weight * 1 <= 70
       } else if (type === 'Diet') {
-        record.isRecorded = true
-
-        const startTime = new Date(`2020-12-06 ${record.items.startTime}`)
-        const finishTime = new Date(`2020-12-06 ${record.items.finishTime}`)
-        const time = finishTime - startTime
-        record.goals[0] = (time/1000/60) <= 480 // 8 hours
-
+        const startDate = new Date(`2020-12-06 ${record.items.startTime}`)
+        const finishDate = new Date(`2020-12-06 ${record.items.finishTime}`)
+        const time = Math.round((finishDate - startDate) / (1000 * 60 * 60) * 100) / 100
         const totalCalorie = (record.items.lunchCalorie * 1) + (record.items.dinnerCalorie * 1) + (record.items.extraCalorie * 1)
+
+        record.isRecorded = true
+        record.goals[0] = time <= 8
         record.goals[1] = totalCalorie <= 2000
       } else if (type === 'Exercise') {
-        record.isRecorded = true
         const isDone = record.items.squat * 1 > 0
                               && record.items.pushUp * 1 > 0
                               && record.items.plank * 1 > 0
                               && record.items.burpeeTest * 1 > 0
-        record.goals[0] = isDone
-
         const isGoalAchieved = record.items.squat * 1 >= 200
                               && record.items.pushUp * 1 >= 100
                               && record.items.plank * 1 >= 300
                               && record.items.burpeeTest * 1 >= 100
+
+        record.isRecorded = true
+        record.goals[0] = isDone
         record.goals[1] = isGoalAchieved
       } else if (type === 'SW') {
-        record.isRecorded = true
         const isDone = (record.items.time * 1) > 0
+
+        record.isRecorded = true
         record.goals[0] = isDone
       } else if (type === 'English') {
-        record.isRecorded = true
         const isDone = (record.items.time * 1) > 0
+
+        record.isRecorded = true
         record.goals[0] = isDone
       }
     }
