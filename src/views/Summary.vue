@@ -82,7 +82,6 @@ export default {
       this.summary = []
 
       const habit = this.$store.getters.GET_HABIT
-    
       habit.forEach(x => {
         if (x.name === 'Weight') {
           let success = false

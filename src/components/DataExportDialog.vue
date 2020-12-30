@@ -11,6 +11,7 @@
         </v-card-title>
 
         <v-card-text>
+          Please click "OK" to download data file.
         </v-card-text>
 
         <v-card-actions>

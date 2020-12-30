@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import {Chart} from 'highcharts-vue'
+import { Chart } from 'highcharts-vue'
 import { AgGridVue } from 'ag-grid-vue'
 import MonthPicker from '../components/MonthPicker'
 import moment from 'moment-timezone'
@@ -127,15 +127,15 @@ export default {
       const habit = this.$store.getters.GET_HABIT
       this.analysis = []
 
-      this.makeSleepAnalysis(habit)
-      this.makeWeightAnalysis(habit)
-      this.makeDietAnalysis(habit)
-      this.makeExerciseAnalysis(habit)
-      this.makeSWAnalysis(habit)
-      this.makeEnglishAnalysis(habit)
+      this.makeSleepAnalysis(habit, 'Sleep')
+      this.makeWeightAnalysis(habit, 'Weight')
+      this.makeDietAnalysis(habit, 'Diet')
+      this.makeExerciseAnalysis(habit, 'Exercise')
+      this.makeSWAnalysis(habit, 'SW')
+      this.makeEnglishAnalysis(habit, 'English')
     },
-    makeSleepAnalysis (habit) {
-      const item = habit.find(x => x.name === 'Sleep')
+    makeSleepAnalysis (habit, type) {
+      const item = habit.find(x => x.name === type)
       const records = item.records.filter(x => this.type === 'ALL' || x.date.indexOf(this.month) !== -1)
       records.sort(function(a, b) {
         return a.date < b.date ? -1 : a.date === b.date ? 0 : 1
@@ -160,8 +160,8 @@ export default {
       analysis.grid.rowData = gridData
       this.analysis.push(analysis)
     },
-    makeWeightAnalysis (habit) {
-      const item = habit.find(x => x.name === 'Weight')
+    makeWeightAnalysis (habit, type) {
+      const item = habit.find(x => x.name === type)
       const records = item.records.filter(x => this.type === 'ALL' || x.date.indexOf(this.month) !== -1)
       records.sort(function(a, b) {
         return a.date < b.date ? -1 : a.date === b.date ? 0 : 1
@@ -186,8 +186,8 @@ export default {
       analysis.grid.rowData = gridData
       this.analysis.push(analysis)
     },
-    makeDietAnalysis (habit) {
-      const item = habit.find(x => x.name === 'Diet')
+    makeDietAnalysis (habit, type) {
+      const item = habit.find(x => x.name === type)
       const records = item.records.filter(x => this.type === 'ALL' || x.date.indexOf(this.month) !== -1)
       records.sort(function(a, b) {
         return a.date < b.date ? -1 : a.date === b.date ? 0 : 1
@@ -232,8 +232,8 @@ export default {
       analysis.grid.rowData = gridData
       this.analysis.push(analysis)
     },
-    makeExerciseAnalysis (habit) {
-      const item = habit.find(x => x.name === 'Exercise')
+    makeExerciseAnalysis (habit, type) {
+      const item = habit.find(x => x.name === type)
       const records = item.records.filter(x => this.type === 'ALL' || x.date.indexOf(this.month) !== -1)
       records.sort(function(a, b) {
         return a.date < b.date ? -1 : a.date === b.date ? 0 : 1
@@ -278,8 +278,8 @@ export default {
       analysis.grid.rowData = gridData
       this.analysis.push(analysis)
     },
-    makeSWAnalysis (habit) {
-      const item = habit.find(x => x.name === 'SW')
+    makeSWAnalysis (habit, type) {
+      const item = habit.find(x => x.name === type)
       const records = item.records.filter(x => this.type === 'ALL' || x.date.indexOf(this.month) !== -1)
       records.sort(function(a, b) {
         return a.date < b.date ? -1 : a.date === b.date ? 0 : 1
@@ -306,8 +306,8 @@ export default {
       analysis.grid.rowData = gridData
       this.analysis.push(analysis)
     },
-    makeEnglishAnalysis (habit) {
-      const item = habit.find(x => x.name === 'English')
+    makeEnglishAnalysis (habit, type) {
+      const item = habit.find(x => x.name === type)
       const records = item.records.filter(x => this.type === 'ALL' || x.date.indexOf(this.month) !== -1)
       records.sort(function(a, b) {
         return a.date < b.date ? -1 : a.date === b.date ? 0 : 1

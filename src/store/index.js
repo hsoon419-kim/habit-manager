@@ -12,95 +12,6 @@ export default new Vuex.Store({
     
     habit: [],
 
-    defaultRecord: [
-      {
-        name: 'Sleep',
-        record: {
-          date: '',
-          isRecorded: false,
-          items: {
-            startDate: '',
-            startTime: '00:00',
-            finishDate: '',
-            finishTime: '00:00',
-          },
-          extraItems: {
-            sleep: '00:00',
-            wakeUp: '00:00',
-          },
-          goals: [false, false]
-        }
-      },
-      {
-        name: 'Weight',
-        record: {
-          date: '',
-          isRecorded: false,
-          items: {
-            weight: 0
-          },
-          goals: [false,false]
-        }
-      },
-      {
-        name: 'Diet',
-        record: {
-          date: '',
-          isRecorded: false,
-          items: {
-            startTime: '00:00',
-            finishTime: '00:00',
-            lunchName: '',
-            lunchCalorie: 0,
-            dinnerName: '',
-            dinnerCalorie: 0,
-            extraName: '',
-            extraCalorie: 0
-          },
-          goals: [false,false]
-        }
-      },
-      {
-        name: 'Exercise',
-        record: {
-          date: '',
-          isRecorded: false,
-          items: {
-            squat: 0,
-            pushUp: 0,
-            plank: 0,
-            burpeeTest: 0,
-          },
-          goals: [false,false]
-        }
-      },
-      {
-        name: 'SW',
-        record: {
-          date: '',
-          isRecorded: false,
-          items: {
-            item: '',
-            time: 0,
-            detail: ''
-          },
-          goals: [false]
-        }
-      },
-      {
-        name: 'English',
-        record: {
-          date: '',
-          isRecorded: false,
-          items: {
-            item: '',
-            time: 0,
-            detail: ''
-          },
-          goals: [false]
-        }
-      }
-    ],
     default: [
       {
         name: 'Sleep',
@@ -219,15 +130,106 @@ export default new Vuex.Store({
         },
         records: []
       }
-    ]
+    ],
+    defaultRecord: [
+      {
+        name: 'Sleep',
+        record: {
+          date: '',
+          isRecorded: false,
+          items: {
+            startDate: '',
+            startTime: '00:00',
+            finishDate: '',
+            finishTime: '00:00',
+          },
+          extraItems: {
+            sleep: '00:00',
+            wakeUp: '00:00',
+          },
+          goals: [false, false]
+        }
+      },
+      {
+        name: 'Weight',
+        record: {
+          date: '',
+          isRecorded: false,
+          items: {
+            weight: 0
+          },
+          goals: [false,false]
+        }
+      },
+      {
+        name: 'Diet',
+        record: {
+          date: '',
+          isRecorded: false,
+          items: {
+            startTime: '00:00',
+            finishTime: '00:00',
+            lunchName: '',
+            lunchCalorie: 0,
+            dinnerName: '',
+            dinnerCalorie: 0,
+            extraName: '',
+            extraCalorie: 0
+          },
+          goals: [false,false]
+        }
+      },
+      {
+        name: 'Exercise',
+        record: {
+          date: '',
+          isRecorded: false,
+          items: {
+            squat: 0,
+            pushUp: 0,
+            plank: 0,
+            burpeeTest: 0,
+          },
+          goals: [false,false]
+        }
+      },
+      {
+        name: 'SW',
+        record: {
+          date: '',
+          isRecorded: false,
+          items: {
+            item: '',
+            time: 0,
+            detail: ''
+          },
+          goals: [false]
+        }
+      },
+      {
+        name: 'English',
+        record: {
+          date: '',
+          isRecorded: false,
+          items: {
+            item: '',
+            time: 0,
+            detail: ''
+          },
+          goals: [false]
+        }
+      }
+    ],
   },
   getters: {
+    GET_DATE (state) {
+      return state.date
+    },
     GET_DATA (state) {
       return JSON.stringify(state.habit)
     },
-
-    GET_DATE (state) {
-      return state.date
+    GET_HABIT (state) {
+      return state.habit
     },
 
     GET_SLEEP_INFO (state) {
@@ -266,36 +268,12 @@ export default new Vuex.Store({
     },
     GET_ENGLISH_RECORD (state) {
       return getHabitRecord(state, 'English')
-    },
-
-    GET_VIEW_COLUMN_DEFS (state) {
-      let columnDefs = []
-
-      columnDefs.push({ headerName: 'Date', field: 'Date', pinned: 'left' })
-
-      state.habit.forEach (x => {
-        let group = { headerName: x.name, children: [] }
-
-        x.info.goals.forEach((item, index) => {
-          const col = `${x.name}-${index+1}`
-          group.children.push({ headerName: item.name, field: col, cellClass: (params) => params.value ? 'cell-class-o' : 'cell-class-x' })
-        })
-
-        columnDefs.push(group)
-      })
-
-      return columnDefs
-    },
-
-    GET_HABIT (state) {
-      return state.habit
     }
   },
   mutations: {
     SET_DATE (state, args) {
       state.date = args
     },
-
     SET_DATA (state, args) {
       if (args === null) {
         state.habit = state.default
@@ -313,7 +291,6 @@ export default new Vuex.Store({
         state.habit = habit
       }
     },
-    
     SET_RECORD (state, args) {
       setHabitRecord(state, args.type, args.record)
     }
@@ -323,12 +300,10 @@ export default new Vuex.Store({
       const data = loadDataFromLocalStorage(context.state.localStorageDataName)
       context.commit('SET_DATA', data)
     },
-
     SAVE_RECORD (context, args) {
       context.commit('SET_RECORD', args)
       saveDataToLocalStorage(context.state.localStorageDataName, context.state.habit)
     },
-
     UPLOAD_DATA (context, args) {
       context.commit('SET_DATA', args)
       saveDataToLocalStorage(context.state.localStorageDataName, context.state.habit)

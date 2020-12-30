@@ -41,7 +41,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import { AgGridVue } from 'ag-grid-vue'
 import MonthPicker from '../components/MonthPicker'
 import moment from 'moment-timezone'
@@ -55,28 +54,47 @@ export default {
     return {
       type: 'MONTH',
       month: moment().tz(moment.tz.guess()).format('YYYY-MM'),
+      columnDefs: [],
       rowData: []
     }
   },
-  computed: {
-    ...mapGetters({
-      columnDefs: 'GET_VIEW_COLUMN_DEFS',
-    })
-  },
   watch: {
     type () {
-      this.makeRowData()
+      this.makeGridData()
     },
     month () {
-      this.makeRowData()
+      this.makeGridData()
     }
   },
   mounted () {
-    this.makeRowData()
+    this.makeGridData()
   },
   methods: {
-    makeRowData () {
+    makeGridData () {
       const habit = this.$store.state.habit
+
+      this.makeColumnDefs(habit)
+      this.makeRowData(habit)
+    },
+    makeColumnDefs (habit) {
+      let columnDefs = []
+
+      columnDefs.push({ headerName: 'Date', field: 'Date', pinned: 'left' })
+
+      habit.forEach (x => {
+        let group = { headerName: x.name, children: [] }
+
+        x.info.goals.forEach((item, index) => {
+          const col = `${x.name}-${index+1}`
+          group.children.push({ headerName: item.name, field: col, cellClass: (params) => params.value ? 'cell-class-o' : 'cell-class-x' })
+        })
+
+        columnDefs.push(group)
+      })
+
+      this.columnDefs = columnDefs
+    },
+    makeRowData (habit) {
       let rowData = []
 
       habit.forEach(x => {
