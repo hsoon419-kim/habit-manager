@@ -165,6 +165,41 @@
         </v-alert>
       </v-col>
 
+      <!-- English -->
+      <v-col cols="12">
+        <v-alert
+          border="left"
+          colored-border
+          :type="englishRecord.isRecorded ? 'success' : 'error'"
+          elevation="2"
+          style="width:100%;"
+        >
+          <v-row no-gutters>
+            <v-col sm="4" cols="12" class="d-flex justify-start align-center">
+              {{englishInfo.name}}
+            </v-col>
+            <v-col sm="4" cols="12" class="d-flex justify-center align-center">
+              <value-input v-model="englishRecord.items.item" :label="englishInfo.info.items.item"></value-input>
+            </v-col>
+            <v-col sm="4" cols="12" class="d-flex justify-center align-center">
+              <value-input v-model="englishRecord.items.time" :label="englishInfo.info.items.time"></value-input>
+            </v-col>
+            <v-col offset-sm="4" sm="8" cols="12" class="d-flex justify-center align-center">
+              <value-input v-model="englishRecord.items.detail" :label="englishInfo.info.items.detail"></value-input>
+            </v-col>
+            <v-col offset-sm="11" sm="1" offset="8" cols="4" class="d-flex justify-end align-center">
+              <v-btn
+                icon
+                color="blue"
+                @click="saveButtonClicked('English')"
+              >
+                <v-icon>mdi-floppy</v-icon>
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-alert>
+      </v-col>
+
       <!-- SW -->
       <v-col cols="12">
         <v-alert
@@ -200,33 +235,33 @@
         </v-alert>
       </v-col>
 
-      <!-- English -->
+      <!-- Economy -->
       <v-col cols="12">
         <v-alert
           border="left"
           colored-border
-          :type="englishRecord.isRecorded ? 'success' : 'error'"
+          :type="economyRecord.isRecorded ? 'success' : 'error'"
           elevation="2"
           style="width:100%;"
         >
           <v-row no-gutters>
             <v-col sm="4" cols="12" class="d-flex justify-start align-center">
-              {{englishInfo.name}}
+              {{economyInfo.name}}
             </v-col>
             <v-col sm="4" cols="12" class="d-flex justify-center align-center">
-              <value-input v-model="englishRecord.items.item" :label="englishInfo.info.items.item"></value-input>
+              <value-input v-model="economyRecord.items.item" :label="economyInfo.info.items.item"></value-input>
             </v-col>
             <v-col sm="4" cols="12" class="d-flex justify-center align-center">
-              <value-input v-model="englishRecord.items.time" :label="englishInfo.info.items.time"></value-input>
+              <value-input v-model="economyRecord.items.time" :label="economyInfo.info.items.time"></value-input>
             </v-col>
             <v-col offset-sm="4" sm="8" cols="12" class="d-flex justify-center align-center">
-              <value-input v-model="englishRecord.items.detail" :label="englishInfo.info.items.detail"></value-input>
+              <value-input v-model="economyRecord.items.detail" :label="economyInfo.info.items.detail"></value-input>
             </v-col>
             <v-col offset-sm="11" sm="1" offset="8" cols="4" class="d-flex justify-end align-center">
               <v-btn
                 icon
                 color="blue"
-                @click="saveButtonClicked('English')"
+                @click="saveButtonClicked('Economy')"
               >
                 <v-icon>mdi-floppy</v-icon>
               </v-btn>
@@ -265,15 +300,17 @@ export default {
       weightInfo: 'GET_WEIGHT_INFO',
       dietInfo: 'GET_DIET_INFO',
       exerciseInfo: 'GET_EXERCISE_INFO',
-      swInfo: 'GET_SW_INFO',
       englishInfo: 'GET_ENGLISH_INFO',
+      swInfo: 'GET_SW_INFO',
+      economyInfo: 'GET_ECONOMY_INFO',
 
       sleepRecord: 'GET_SLEEP_RECORD',
       weightRecord: 'GET_WEIGHT_RECORD',
       dietRecord: 'GET_DIET_RECORD',
       exerciseRecord: 'GET_EXERCISE_RECORD',
+      englishRecord: 'GET_ENGLISH_RECORD',
       swRecord: 'GET_SW_RECORD',
-      englishRecord: 'GET_ENGLISH_RECORD'
+      economyRecord: 'GET_ECONOMY_RECORD'
     })
   },
   watch : {
@@ -311,11 +348,14 @@ export default {
         case 'Exercise':
           record = this.exerciseRecord
           break
+        case 'English':
+          record = this.englishRecord
+          break
         case 'SW':
           record = this.swRecord
           break
-        case 'English':
-          record = this.englishRecord
+        case 'Economy':
+          record = this.economyRecord
           break
       }
 
@@ -359,12 +399,17 @@ export default {
         record.isRecorded = true
         record.goals[0] = isDone
         record.goals[1] = isGoalAchieved
+      } else if (type === 'English') {
+        const isDone = (record.items.time * 1) > 0
+
+        record.isRecorded = true
+        record.goals[0] = isDone
       } else if (type === 'SW') {
         const isDone = (record.items.time * 1) > 0
 
         record.isRecorded = true
         record.goals[0] = isDone
-      } else if (type === 'English') {
+      } else if (type === 'Economy') {
         const isDone = (record.items.time * 1) > 0
 
         record.isRecorded = true

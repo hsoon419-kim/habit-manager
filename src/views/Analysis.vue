@@ -131,8 +131,9 @@ export default {
       this.makeWeightAnalysis(habit, 'Weight')
       this.makeDietAnalysis(habit, 'Diet')
       this.makeExerciseAnalysis(habit, 'Exercise')
-      this.makeSWAnalysis(habit, 'SW')
       this.makeEnglishAnalysis(habit, 'English')
+      this.makeSWAnalysis(habit, 'SW')
+      this.makeEconomyAnalysis(habit, 'Economy')
     },
     makeSleepAnalysis (habit, type) {
       const item = habit.find(x => x.name === type)
@@ -278,6 +279,34 @@ export default {
       analysis.grid.rowData = gridData
       this.analysis.push(analysis)
     },
+    makeEnglishAnalysis (habit, type) {
+      const item = habit.find(x => x.name === type)
+      const records = item.records.filter(x => this.type === 'ALL' || x.date.indexOf(this.month) !== -1)
+      records.sort(function(a, b) {
+        return a.date < b.date ? -1 : a.date === b.date ? 0 : 1
+      })
+
+      const chartData = records.map(x => Math.round(parseFloat(x.items.time)*100)/100)
+      const gridData = records.map(x => {
+        return { date: x.date, item: x.items.item, detail: x.items.detail, time: x.items.time }
+      })
+
+      let analysis = JSON.parse(JSON.stringify(this.template))
+      analysis.name = 'English'
+      analysis.total = `Total ${chartData.length === 0 ? 0 : chartData.reduce((a, b) => a+b)} hours`
+      analysis.chartOptions.series = [{
+        name: 'hours',
+        data: chartData
+      }]
+      analysis.grid.columnDefs = [
+        { headerName: 'date', field: 'date', width:150, pinned: 'left' },
+        { headerName: 'item', field: 'item', width:150 },
+        { headerName: 'detail', field: 'detail', width:200 },
+        { headerName: 'time', field: 'time', width:100 }
+      ]
+      analysis.grid.rowData = gridData
+      this.analysis.push(analysis)
+    },
     makeSWAnalysis (habit, type) {
       const item = habit.find(x => x.name === type)
       const records = item.records.filter(x => this.type === 'ALL' || x.date.indexOf(this.month) !== -1)
@@ -306,7 +335,7 @@ export default {
       analysis.grid.rowData = gridData
       this.analysis.push(analysis)
     },
-    makeEnglishAnalysis (habit, type) {
+    makeEconomyAnalysis (habit, type) {
       const item = habit.find(x => x.name === type)
       const records = item.records.filter(x => this.type === 'ALL' || x.date.indexOf(this.month) !== -1)
       records.sort(function(a, b) {
@@ -319,7 +348,7 @@ export default {
       })
 
       let analysis = JSON.parse(JSON.stringify(this.template))
-      analysis.name = 'English'
+      analysis.name = 'Economy'
       analysis.total = `Total ${chartData.length === 0 ? 0 : chartData.reduce((a, b) => a+b)} hours`
       analysis.chartOptions.series = [{
         name: 'hours',

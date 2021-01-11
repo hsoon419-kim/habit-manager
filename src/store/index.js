@@ -99,6 +99,22 @@ export default new Vuex.Store({
         records: []
       },
       {
+        name: 'English',
+        info: {
+          items: {
+            item: 'Item',
+            time: 'Time (hours)',
+            detail: 'Detail',
+          },
+          goals: [
+            {
+              name: 'Study'
+            }
+          ]
+        },
+        records: []
+      },
+      {
         name: 'SW',
         info: {
           items: {
@@ -115,7 +131,7 @@ export default new Vuex.Store({
         records: []
       },
       {
-        name: 'English',
+        name: 'Economy',
         info: {
           items: {
             item: 'Item',
@@ -194,6 +210,19 @@ export default new Vuex.Store({
         }
       },
       {
+        name: 'English',
+        record: {
+          date: '',
+          isRecorded: false,
+          items: {
+            item: '',
+            time: 0,
+            detail: ''
+          },
+          goals: [false]
+        }
+      },
+      {
         name: 'SW',
         record: {
           date: '',
@@ -207,7 +236,7 @@ export default new Vuex.Store({
         }
       },
       {
-        name: 'English',
+        name: 'Economy',
         record: {
           date: '',
           isRecorded: false,
@@ -244,11 +273,14 @@ export default new Vuex.Store({
     GET_EXERCISE_INFO (state) {
       return getHabitInfo(state, 'Exercise')
     },
+    GET_ENGLISH_INFO (state) {
+      return getHabitInfo(state, 'English')
+    },
     GET_SW_INFO (state) {
       return getHabitInfo(state, 'SW')
     },
-    GET_ENGLISH_INFO (state) {
-      return getHabitInfo(state, 'English')
+    GET_ECONOMY_INFO (state) {
+      return getHabitInfo(state, 'Economy')
     },
 
     GET_SLEEP_RECORD (state) {
@@ -263,11 +295,14 @@ export default new Vuex.Store({
     GET_EXERCISE_RECORD (state) {
       return getHabitRecord(state, 'Exercise')
     },
+    GET_ENGLISH_RECORD (state) {
+      return getHabitRecord(state, 'English')
+    },
     GET_SW_RECORD (state) {
       return getHabitRecord(state, 'SW')
     },
-    GET_ENGLISH_RECORD (state) {
-      return getHabitRecord(state, 'English')
+    GET_ECONOMY_RECORD (state) {
+      return getHabitRecord(state, 'Economy')
     }
   },
   mutations: {
